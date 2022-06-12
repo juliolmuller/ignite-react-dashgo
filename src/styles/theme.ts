@@ -15,6 +15,10 @@ export default extendTheme({
       900: '#181b23',
     },
   },
+  fonts: {
+    heading: '"Roboto", sans-serif',
+    body: '"Roboto", sans-serif',
+  },
   styles: {
     global: {
       body: {
