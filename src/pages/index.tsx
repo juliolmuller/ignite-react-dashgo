@@ -1,12 +1,7 @@
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-} from '@chakra-ui/react';
+import { Button, Flex, Stack } from '@chakra-ui/react';
 import Head from 'next/head';
+
+import { FormInput } from '~/components';
 
 export default function SignInPage() {
   return (
@@ -14,6 +9,7 @@ export default function SignInPage() {
       <Head>
         <title>Sign In | Dashgo</title>
       </Head>
+
       <Flex align="center" justify="center" h="100vh" w="100vw">
         <Flex
           as="form"
@@ -25,33 +21,8 @@ export default function SignInPage() {
           p="8"
         >
           <Stack spacing={4}>
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input
-                size="lg"
-                variant="filled"
-                bg="gray.900"
-                focusBorderColor="pink.500"
-                _hover={{ bg: 'gray.900' }}
-                id="email"
-                name="email"
-                type="email"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="password">Senha</FormLabel>
-              <Input
-                size="lg"
-                variant="filled"
-                bg="gray.900"
-                focusBorderColor="pink.500"
-                _hover={{ bg: 'gray.900' }}
-                id="password"
-                name="password"
-                type="password"
-              />
-            </FormControl>
+            <FormInput label="Email" name="email" type="email" />
+            <FormInput label="Senha" name="password" type="password" />
           </Stack>
 
           <Button size="lg" mt="6" colorScheme="pink" type="submit">
