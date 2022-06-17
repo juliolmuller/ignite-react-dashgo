@@ -18,7 +18,7 @@ import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 
 import { AppHeader, AppSideBar, Pagination } from '~/components';
 
-export default function DashboardPage() {
+export default function UsersPage() {
   return (
     <>
       <Head>
