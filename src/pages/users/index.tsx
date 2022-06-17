@@ -16,7 +16,7 @@ import {
 import Head from 'next/head';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 
-import { AppHeader, AppSideBar } from '~/components';
+import { AppHeader, AppSideBar, Pagination } from '~/components';
 
 export default function DashboardPage() {
   return (
@@ -91,6 +91,8 @@ export default function DashboardPage() {
                   ))}
               </Tbody>
             </Table>
+
+            <Pagination />
           </Box>
         </Flex>
       </Flex>
