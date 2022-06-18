@@ -1,47 +1,43 @@
 import {
   FormControl,
-  FormControlProps,
+  FormErrorMessage,
   FormLabel,
-  FormLabelProps,
   Input,
   InputProps,
 } from '@chakra-ui/react';
-import { HTMLInputTypeAttribute } from 'react';
+import { forwardRef, HTMLInputTypeAttribute } from 'react';
+import { FieldError } from 'react-hook-form';
 
 export interface FormInputProps extends InputProps {
   name: HTMLInputTypeAttribute;
+  error?: FieldError;
   id?: string;
   label?: string;
-  FormControlProps?: FormControlProps;
-  FormLabelProps?: FormLabelProps;
 }
 
-export function FormInput({
-  label,
-  name,
-  id = name,
-  FormControlProps: formControlProps = {},
-  FormLabelProps: formLabelProps = {},
-  ...props
-}: FormInputProps) {
-  return (
-    <FormControl {...formControlProps}>
-      {label && (
-        <FormLabel htmlFor={id} {...formLabelProps}>
-          {label}
-        </FormLabel>
-      )}
+// eslint-disable-next-line react/display-name
+export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
+  (props, ref) => {
+    const { error, label, name, id = name, ...rest } = props;
 
-      <Input
-        id={id}
-        name={name}
-        size="lg"
-        variant="filled"
-        bg="gray.900"
-        focusBorderColor="pink.500"
-        _hover={{ bg: 'gray.900' }}
-        {...props}
-      />
-    </FormControl>
-  );
-}
+    return (
+      <FormControl isInvalid={Boolean(error)}>
+        {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
+
+        <Input
+          ref={ref}
+          id={id}
+          name={name}
+          size="lg"
+          variant="filled"
+          bg="gray.900"
+          focusBorderColor="pink.500"
+          _hover={{ bg: 'gray.900' }}
+          {...rest}
+        />
+
+        {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+      </FormControl>
+    );
+  },
+);
