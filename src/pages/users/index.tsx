@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Icon,
+  IconButton,
   Table,
   Tbody,
   Td,
@@ -12,6 +13,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
@@ -19,6 +21,8 @@ import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { AppHeader, AppSideBar, Pagination } from '~/components';
 
 export default function UsersPage() {
+  const isDisplayMd = useBreakpointValue({ base: false, md: true });
+
   return (
     <>
       <Head>
@@ -51,11 +55,11 @@ export default function UsersPage() {
             <Table colorScheme="whiteAlpha">
               <Thead>
                 <Tr>
-                  <Th w="8" px="6" color="gray.300">
+                  <Th w="8" px={['2', '4', '6']} color="gray.300">
                     <Checkbox colorScheme="pink" />
                   </Th>
                   <Th>Usuário</Th>
-                  <Th>Data de criação</Th>
+                  {isDisplayMd && <Th>Data de criação</Th>}
                   <Th w="8" />
                 </Tr>
               </Thead>
@@ -64,7 +68,7 @@ export default function UsersPage() {
                   .fill(0)
                   .map((_, index) => (
                     <Tr key={index}>
-                      <Td px="6">
+                      <Td px={['2', '4', '6']}>
                         <Checkbox colorScheme="pink" />
                       </Td>
                       <Td>
@@ -75,17 +79,28 @@ export default function UsersPage() {
                           </Text>
                         </Box>
                       </Td>
-                      <Td>30 de março de 1992</Td>
+                      {isDisplayMd && <Td>30 de março de 1992</Td>}
                       <Td>
-                        <Button
-                          as="a"
-                          colorScheme="purple"
-                          size="sm"
-                          fontSize="sm"
-                          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                        >
-                          Editar
-                        </Button>
+                        {isDisplayMd ? (
+                          <Button
+                            as="a"
+                            colorScheme="purple"
+                            size="sm"
+                            fontSize="sm"
+                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                          >
+                            Editar
+                          </Button>
+                        ) : (
+                          <IconButton
+                            as="a"
+                            icon={<Icon as={RiPencilLine} fontSize="16" />}
+                            colorScheme="purple"
+                            size="sm"
+                            fontSize="sm"
+                            aria-label="Editar"
+                          />
+                        )}
                       </Td>
                     </Tr>
                   ))}

@@ -5,11 +5,11 @@ export function NotificationIcons() {
   return (
     <HStack
       align="center"
-      spacing="8"
-      mx="8"
+      spacing={['6', '8']}
+      mx={['6', '8']}
       borderColor="gray.700"
       borderRightWidth={1}
-      pr="8"
+      pr={['6', '8']}
       py="1"
       color="gray.300"
     >

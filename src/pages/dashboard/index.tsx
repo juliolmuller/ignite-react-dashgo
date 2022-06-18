@@ -73,7 +73,7 @@ export default function DashboardPage() {
           <AppSideBar />
 
           <SimpleGrid flex="1" gap="4" minChildWidth={320}>
-            <Box borderRadius={8} bg="gray.800" p="8" pb="4">
+            <Box borderRadius={8} bg="gray.800" p={['6', '8']} pb="4">
               <Text mb="4" fontSize="lg">
                 Inscritos da semana
               </Text>
@@ -85,7 +85,8 @@ export default function DashboardPage() {
                 series={chartSeries}
               />
             </Box>
-            <Box borderRadius={8} bg="gray.800" p="8" pb="4">
+
+            <Box borderRadius={8} bg="gray.800" p={['6', '8']} pb="4">
               <Text mb="4" fontSize="lg">
                 Taxa de abertura
               </Text>

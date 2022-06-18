@@ -24,7 +24,7 @@ export default function CreateUserPage() {
         <Flex w="100%" maxW={1480} mx="auto" my="6" px="6">
           <AppSideBar />
 
-          <Box as="form" flex="1" borderRadius={8} bg="gray.800" p="8">
+          <Box as="form" flex="1" borderRadius={8} bg="gray.800" p={['6', '8']}>
             <Heading size="lg" fontWeight="normal">
               Criar Usuário
             </Heading>
@@ -32,12 +32,12 @@ export default function CreateUserPage() {
             <Divider my="6" borderColor="gray.700" />
 
             <Stack spacing="8">
-              <SimpleGrid minChildWidth={240} spacing="8" w="100%">
+              <SimpleGrid minChildWidth={240} spacing={['6', '8']} w="100%">
                 <FormInput label="Nome completo" name="name" />
                 <FormInput label="E-mail" name="email" type="email" />
               </SimpleGrid>
 
-              <SimpleGrid minChildWidth={240} spacing="8" w="100%">
+              <SimpleGrid minChildWidth={240} spacing={['6', '8']} w="100%">
                 <FormInput label="Senha" name="password" type="password" />
                 <FormInput
                   label="Confirmação da senha"
