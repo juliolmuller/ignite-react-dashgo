@@ -8,6 +8,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
+import NextLink from 'next/link';
 
 import { AppHeader, AppSideBar, FormInput } from '~/components';
 
@@ -48,7 +49,12 @@ export default function CreateUserPage() {
             </Stack>
 
             <Flex justify="flex-end" gap="4" mt="12">
-              <Button colorScheme="whiteAlpha">Cancelar</Button>
+              <NextLink href="/users" passHref>
+                <Button as="a" colorScheme="whiteAlpha">
+                  Cancelar
+                </Button>
+              </NextLink>
+
               <Button type="submit" colorScheme="pink">
                 Salvar
               </Button>
