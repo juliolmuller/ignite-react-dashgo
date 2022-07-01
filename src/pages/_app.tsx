@@ -1,8 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { DrawerProvider } from '~/contexts';
 import { initializeServer } from '~/services/mirage';
+import queryClient from '~/services/query-client';
 import theme from '~/styles/theme';
 
 if (
@@ -14,10 +17,14 @@ if (
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <DrawerProvider>
-        <Component {...pageProps} />
-      </DrawerProvider>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <DrawerProvider>
+          <Component {...pageProps} />
+        </DrawerProvider>
+      </ChakraProvider>
+
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }

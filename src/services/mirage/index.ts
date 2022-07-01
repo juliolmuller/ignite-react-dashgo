@@ -6,7 +6,7 @@ export interface UserModel {
   name: string;
   email: string;
   password: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export function initializeServer() {
@@ -20,7 +20,7 @@ export function initializeServer() {
         name: () => `${faker.name.firstName()} ${faker.name.lastName()}`,
         email: () => faker.internet.email().toLowerCase(),
         password: () => 'Senha123',
-        createdAt: () => faker.date.recent().toISOString(),
+        createdAt: () => faker.date.recent(180).toISOString(),
       }),
     },
 

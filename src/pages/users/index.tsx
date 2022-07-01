@@ -6,6 +6,7 @@ import {
   Heading,
   Icon,
   IconButton,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -18,11 +19,18 @@ import {
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
+import { useQuery } from 'react-query';
 
 import { AppHeader, AppSideBar, Pagination } from '~/components';
+import { UserModel } from '~/services/mirage';
 
 export default function UsersPage() {
   const isDisplayMd = useBreakpointValue({ base: false, md: true });
+  const { data: users = [], isLoading } = useQuery('users', async () => {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+    return data.users as UserModel[];
+  });
 
   return (
     <>
@@ -55,62 +63,81 @@ export default function UsersPage() {
               </NextLink>
             </Flex>
 
-            <Table colorScheme="whiteAlpha">
-              <Thead>
-                <Tr>
-                  <Th w="8" px={['2', '4', '6']} color="gray.300">
-                    <Checkbox colorScheme="pink" />
-                  </Th>
-                  <Th>Usuário</Th>
-                  {isDisplayMd && <Th>Data de criação</Th>}
-                  <Th w="8" />
-                </Tr>
-              </Thead>
-              <Tbody>
-                {Array(3)
-                  .fill(0)
-                  .map((_, index) => (
-                    <Tr key={index}>
-                      <Td px={['2', '4', '6']}>
+            {isLoading ? (
+              <Flex justify="center" py="40">
+                <Spinner />
+              </Flex>
+            ) : (
+              <>
+                <Table colorScheme="whiteAlpha">
+                  <Thead>
+                    <Tr>
+                      <Th w="8" px={['2', '4', '6']} color="gray.300">
                         <Checkbox colorScheme="pink" />
-                      </Td>
-                      <Td>
-                        <Box>
-                          <Text fontWeight="bold">Julio L. Muller</Text>
-                          <Text fontSize="sm" color="gray.300">
-                            juliolmuller@email.com
-                          </Text>
-                        </Box>
-                      </Td>
-                      {isDisplayMd && <Td>30 de março de 1992</Td>}
-                      <Td>
-                        {isDisplayMd ? (
-                          <Button
-                            as="a"
-                            colorScheme="purple"
-                            size="sm"
-                            fontSize="sm"
-                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                          >
-                            Editar
-                          </Button>
-                        ) : (
-                          <IconButton
-                            as="a"
-                            icon={<Icon as={RiPencilLine} fontSize="16" />}
-                            colorScheme="purple"
-                            size="sm"
-                            fontSize="sm"
-                            aria-label="Editar"
-                          />
-                        )}
-                      </Td>
+                      </Th>
+                      <Th>Usuário</Th>
+                      {isDisplayMd && <Th>Data de criação</Th>}
+                      <Th w="8" />
                     </Tr>
-                  ))}
-              </Tbody>
-            </Table>
+                  </Thead>
+                  <Tbody>
+                    {users.map((user) => (
+                      <Tr key={user.id}>
+                        <Td px={['2', '4', '6']}>
+                          <Checkbox colorScheme="pink" />
+                        </Td>
+                        <Td>
+                          <Box>
+                            <Text fontWeight="bold">{user.name}</Text>
+                            <Text fontSize="sm" color="gray.300">
+                              user.email
+                            </Text>
+                          </Box>
+                        </Td>
+                        {isDisplayMd && (
+                          <Td>
+                            {new Date(user.createdAt).toLocaleDateString(
+                              'pt-BR',
+                              {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                              },
+                            )}
+                          </Td>
+                        )}
+                        <Td>
+                          {isDisplayMd ? (
+                            <Button
+                              as="a"
+                              colorScheme="purple"
+                              size="sm"
+                              fontSize="sm"
+                              leftIcon={
+                                <Icon as={RiPencilLine} fontSize="16" />
+                              }
+                            >
+                              Editar
+                            </Button>
+                          ) : (
+                            <IconButton
+                              as="a"
+                              icon={<Icon as={RiPencilLine} fontSize="16" />}
+                              colorScheme="purple"
+                              size="sm"
+                              fontSize="sm"
+                              aria-label="Editar"
+                            />
+                          )}
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
 
-            <Pagination />
+                <Pagination />
+              </>
+            )}
           </Box>
         </Flex>
       </Flex>
