@@ -26,7 +26,11 @@ import { UserModel } from '~/services/mirage';
 
 export default function UsersPage() {
   const isDisplayMd = useBreakpointValue({ base: false, md: true });
-  const { data: users = [], isLoading } = useQuery('users', async () => {
+  const {
+    data: users = [],
+    isLoading,
+    isFetching,
+  } = useQuery('users', async () => {
     const response = await fetch('/api/users');
     const data = await response.json();
     return data.users as UserModel[];
@@ -48,6 +52,9 @@ export default function UsersPage() {
             <Flex align="center" justify="space-between" mb="8">
               <Heading size="lg" fontWeight="normal">
                 Lista de Usuários
+                {isFetching && !isLoading && (
+                  <Spinner size="sm" color="gray.500" ml="4" />
+                )}
               </Heading>
 
               <NextLink href="/users/create" passHref>
