@@ -99,7 +99,7 @@ export default function UsersPage() {
                           <Box>
                             <Text fontWeight="bold">{user.name}</Text>
                             <Text fontSize="sm" color="gray.300">
-                              user.email
+                              {user.email}
                             </Text>
                           </Box>
                         </Td>
