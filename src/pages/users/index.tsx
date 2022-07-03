@@ -18,22 +18,24 @@ import {
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import NextLink from 'next/link';
+import { useState } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { useQuery } from 'react-query';
 
 import { AppHeader, AppSideBar, Pagination } from '~/components';
-import { UserModel } from '~/services/mirage';
+import { PagedResponse, UserModel } from '~/services/mirage';
 
 export default function UsersPage() {
   const isDisplayMd = useBreakpointValue({ base: false, md: true });
+  const [page, setPage] = useState(1);
   const {
-    data: users = [],
+    data: { users = [], meta } = {},
     isLoading,
     isFetching,
-  } = useQuery('users', async () => {
-    const response = await fetch('/api/users');
-    const data = await response.json();
-    return data.users as UserModel[];
+  } = useQuery(['users', page], async () => {
+    const response = await fetch(`/api/users?page=${page}&limit=10`);
+    const { data, meta } = (await response.json()) as PagedResponse<UserModel>;
+    return { users: data, meta };
   });
 
   return (
@@ -88,7 +90,7 @@ export default function UsersPage() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {users.map((user) => (
+                    {users.map((user: UserModel) => (
                       <Tr key={user.id}>
                         <Td px={['2', '4', '6']}>
                           <Checkbox colorScheme="pink" />
@@ -142,7 +144,15 @@ export default function UsersPage() {
                   </Tbody>
                 </Table>
 
-                <Pagination />
+                {meta && (
+                  <Pagination
+                    currentPage={page}
+                    totalPages={meta.totalPages}
+                    itemsPerPage={meta.recordsPerPage}
+                    totalItems={meta.totalRecords}
+                    onClick={setPage}
+                  />
+                )}
               </>
             )}
           </Box>

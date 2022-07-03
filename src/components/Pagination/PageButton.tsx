@@ -1,11 +1,11 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 
-export interface PageButtonProps {
-  children: string;
+export interface PageButtonProps extends ButtonProps {
+  children: number | string;
   active?: boolean;
 }
 
-export function PageButton({ active, children }: PageButtonProps) {
+export function PageButton({ active, children, ...props }: PageButtonProps) {
   if (active) {
     return (
       <Button
@@ -18,6 +18,7 @@ export function PageButton({ active, children }: PageButtonProps) {
           bg: 'pink.500',
           cursor: 'default',
         }}
+        {...props}
       >
         {children}
       </Button>
@@ -31,6 +32,7 @@ export function PageButton({ active, children }: PageButtonProps) {
       bg="gray.700"
       fontSize="xs"
       _hover={{ bg: 'gray.500' }}
+      {...props}
     >
       {children}
     </Button>
