@@ -51,6 +51,7 @@ export function initializeServer() {
         const pageAsNumber = parseInt(page ?? 1, 10);
         const limitAsNumber = parseInt(limit ?? 20, 10);
         const users = schema.all('user').models as UserModel[];
+        users.sort((a, b) => -a.createdAt.localeCompare(b.createdAt));
         const totalRecords = users.length;
         const totalPages = Math.ceil(totalRecords / limitAsNumber);
         const pagedUsers = users.slice(
