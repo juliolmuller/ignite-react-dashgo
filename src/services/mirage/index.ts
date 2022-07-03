@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { createServer, Factory, Model } from 'miragejs';
+import { ActiveModelSerializer, createServer, Factory, Model } from 'miragejs';
 
 export interface PagedResponse<T> {
   data: T[];
@@ -25,6 +25,10 @@ export interface UserModel {
 
 export function initializeServer() {
   return createServer({
+    serializers: {
+      application: ActiveModelSerializer,
+    },
+
     models: {
       user: Model.extend<Partial<UserModel>>({}),
     },

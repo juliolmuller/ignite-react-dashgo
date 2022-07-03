@@ -12,9 +12,12 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import * as yup from 'yup';
 
 import { AppHeader, AppSideBar, FormInput } from '~/components';
+import { UserModel } from '~/services/mirage';
+import queryClient from '~/services/query-client';
 
 export interface CreateUserFormData {
   name: string;
@@ -47,11 +50,25 @@ export default function CreateUserPage() {
   const { formState, handleSubmit, register } = useForm<CreateUserFormData>({
     resolver: yupResolver(createUserFormSchema),
   });
+  const { mutateAsync } = useMutation(
+    async (userData: CreateUserFormData) => {
+      const user = { ...userData, createdAt: new Date().toISOString() };
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user }),
+      });
+      const data = await response.json();
+      return data.user as UserModel;
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries(['users']),
+    },
+  );
 
   async function handleCreateUser(data: CreateUserFormData) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await mutateAsync(data);
     router.replace('/users');
-    console.log(data);
   }
 
   return (
