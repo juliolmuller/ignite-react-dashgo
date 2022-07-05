@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { ActiveModelSerializer, createServer, Factory, Model } from 'miragejs';
 
+import { AUTH_BASE_URL } from '../api';
+
 export interface PagedResponse<T> {
   data: T[];
   meta: {
@@ -89,7 +91,7 @@ export function initializeServer() {
 
       // reset namespace to avoid conflicts with Next's router
       this.namespace = '';
-      this.passthrough();
+      this.passthrough(`${AUTH_BASE_URL}/**`);
     },
   });
 }

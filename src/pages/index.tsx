@@ -1,7 +1,15 @@
-import { Button, Flex, Stack } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Button,
+  Collapse,
+  Flex,
+  Stack,
+} from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -24,15 +32,19 @@ const signInFormSchema = yup.object().shape({
 export default function SignInPage() {
   const router = useRouter();
   const { signIn } = useAuth();
+  const [errorMsg, setErrorMsg] = useState('');
   const { formState, handleSubmit, register } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
   });
 
   async function handleSignIn(data: SignInFormData) {
     try {
+      setErrorMsg('');
       await signIn(data);
-      // router.replace('/dashboard');
-    } catch {}
+      router.replace('/dashboard');
+    } catch (error: any) {
+      setErrorMsg(error.message);
+    }
   }
 
   return (
@@ -54,6 +66,19 @@ export default function SignInPage() {
           onSubmit={handleSubmit(handleSignIn)}
         >
           <Stack spacing={4}>
+            <Collapse in={Boolean(errorMsg)} animateOpacity>
+              <Alert
+                status="error"
+                mb="4"
+                borderRadius="md"
+                color="red.700"
+                fontWeight="bold"
+              >
+                <AlertIcon />
+                {errorMsg}
+              </Alert>
+            </Collapse>
+
             <FormInput
               autoFocus
               error={formState.errors.email}
@@ -70,7 +95,7 @@ export default function SignInPage() {
           </Stack>
 
           <Button
-            isLoading={formState.isSubmitSuccessful}
+            isLoading={formState.isSubmitting}
             type="submit"
             size="lg"
             mt="6"
