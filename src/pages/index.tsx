@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { FormInput } from '~/components';
+import { useAuth } from '~/contexts';
 
 export interface SignInFormData {
   email: string;
@@ -22,14 +23,16 @@ const signInFormSchema = yup.object().shape({
 
 export default function SignInPage() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const { formState, handleSubmit, register } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
   });
 
   async function handleSignIn(data: SignInFormData) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    router.replace('/dashboard');
-    console.log(data);
+    try {
+      await signIn(data);
+      // router.replace('/dashboard');
+    } catch {}
   }
 
   return (

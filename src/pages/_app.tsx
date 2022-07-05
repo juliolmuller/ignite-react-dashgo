@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-import { DrawerProvider } from '~/contexts';
+import { AuthProvider, DrawerProvider } from '~/contexts';
 import { initializeServer } from '~/services/mirage';
 import queryClient from '~/services/query-client';
 import theme from '~/styles/theme';
@@ -17,14 +17,16 @@ if (
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <DrawerProvider>
-          <Component {...pageProps} />
-        </DrawerProvider>
-      </ChakraProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <DrawerProvider>
+            <Component {...pageProps} />
+          </DrawerProvider>
+        </ChakraProvider>
 
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
