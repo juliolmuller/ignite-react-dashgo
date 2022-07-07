@@ -4,16 +4,8 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { AuthProvider, DrawerProvider } from '~/contexts';
-import { initializeServer } from '~/services/mirage';
 import queryClient from '~/services/query-client';
 import theme from '~/styles/theme';
-
-if (
-  typeof window !== 'undefined'
-  // && process.env.NODE_ENV === 'development'
-) {
-  initializeServer();
-}
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

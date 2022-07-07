@@ -24,6 +24,14 @@ import { useQuery } from 'react-query';
 
 import { AppHeader, AppSideBar, Pagination } from '~/components';
 import { PagedResponse, UserModel } from '~/services/mirage';
+import { initializeServer } from '~/services/mirage';
+
+if (
+  typeof window !== 'undefined'
+  // && process.env.NODE_ENV === 'development'
+) {
+  initializeServer();
+}
 
 export default function UsersPage() {
   const isDisplayMd = useBreakpointValue({ base: false, md: true });
