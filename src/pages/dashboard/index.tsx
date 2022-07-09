@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { Props as ChartProps } from 'react-apexcharts';
 
 import { AppHeader, AppSideBar } from '~/components';
+import { withServerSideAuth } from '~/utils/ssr';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -104,3 +105,9 @@ export default function DashboardPage() {
     </>
   );
 }
+
+export const getServerSideProps = withServerSideAuth(async () => {
+  return {
+    props: {},
+  };
+});

@@ -15,6 +15,7 @@ import * as yup from 'yup';
 
 import { FormInput } from '~/components';
 import { useAuth } from '~/contexts';
+import { withServerSideGuest } from '~/utils/ssr';
 
 export interface SignInFormData {
   email: string;
@@ -108,3 +109,9 @@ export default function SignInPage() {
     </>
   );
 }
+
+export const getServerSideProps = withServerSideGuest(async () => {
+  return {
+    props: {},
+  };
+});

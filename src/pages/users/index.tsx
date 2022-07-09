@@ -25,6 +25,7 @@ import { useQuery } from 'react-query';
 import { AppHeader, AppSideBar, Pagination } from '~/components';
 import { PagedResponse, UserModel } from '~/services/mirage';
 import { initializeServer } from '~/services/mirage';
+import { withServerSideAuth } from '~/utils/ssr';
 
 if (
   typeof window !== 'undefined'
@@ -169,3 +170,9 @@ export default function UsersPage() {
     </>
   );
 }
+
+export const getServerSideProps = withServerSideAuth(async () => {
+  return {
+    props: {},
+  };
+});

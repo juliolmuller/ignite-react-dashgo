@@ -18,6 +18,7 @@ import * as yup from 'yup';
 import { AppHeader, AppSideBar, FormInput } from '~/components';
 import { UserModel } from '~/services/mirage';
 import queryClient from '~/services/query-client';
+import { withServerSideAuth } from '~/utils/ssr';
 
 export interface CreateUserFormData {
   name: string;
@@ -154,3 +155,9 @@ export default function CreateUserPage() {
     </>
   );
 }
+
+export const getServerSideProps = withServerSideAuth(async () => {
+  return {
+    props: {},
+  };
+});
