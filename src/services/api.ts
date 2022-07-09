@@ -1,6 +1,16 @@
 import axios from 'axios';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
+interface RequestsAwaitingTokenRefresh {
+  resolve: () => void;
+  reject: () => void;
+}
+
+// flag to allow queuing requests awaiting token refresh
+let isRefreshingToken = false;
+// queue of requests to be executed once token is refreshed
+const requestsQueue = new Set<RequestsAwaitingTokenRefresh>();
+
 export const AUTH_BASE_URL = process.env.AUTH_SERVER ?? 'http://localhost:3333';
 
 const api = axios.create({
@@ -24,10 +34,19 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (
-      error.response.status !== 401 ||
-      error.response.data.code !== 'token.expired'
+      error.response?.status !== 401 ||
+      error.response?.data?.code !== 'token.expired'
     ) {
-      return error;
+      return Promise.reject(error);
+    }
+
+    if (isRefreshingToken) {
+      return new Promise((resolve, reject) => {
+        requestsQueue.add({
+          resolve: () => resolve(api.request(error.config)),
+          reject: () => reject(error),
+        });
+      });
     }
 
     const cookies = parseCookies();
@@ -35,11 +54,12 @@ api.interceptors.response.use(
       cookies[process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!];
 
     if (!refreshToken) {
-      return error;
+      return Promise.reject(error);
     }
 
     try {
-      const { data } = await api.post('/refresh', { refreshToken });
+      isRefreshingToken = true;
+      const { data } = await api.post('refresh', { refreshToken });
       const cookiesOptions = {
         maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
         path: '/',
@@ -57,10 +77,21 @@ api.interceptors.response.use(
         data.refreshToken,
         cookiesOptions,
       );
+      requestsQueue.forEach((request) => {
+        requestsQueue.delete(request);
+        request.resolve();
+      });
+
+      return api.request(error.config);
     } catch {
       destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!);
       destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!);
-      return error;
+      requestsQueue.forEach((request) => {
+        requestsQueue.delete(request);
+        request.reject();
+      });
+
+      return Promise.reject(error);
     }
   },
 );

@@ -72,13 +72,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (token && refreshToken) {
       api
-        .get('me')
-        .then(({ email, roles, permissions }: any) => {
+        .get<User>('me')
+        .then(({ data }) => {
+          const { email, roles, permissions } = data;
           setUser({ email, roles, permissions });
         })
-        .catch(() => {
-          router.replace('/');
-        });
+        .catch((error) => router.replace('/'));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
