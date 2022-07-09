@@ -85,7 +85,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const { email, roles, permissions } = data;
           setUser({ email, roles, permissions });
         })
-        .catch(signOut);
+        .catch(() => {
+          if (typeof window === 'undefined') {
+            return Promise.reject(new Error('auth error'));
+          }
+          signOut();
+        });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

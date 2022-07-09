@@ -3,7 +3,7 @@ import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from 'next';
-import { parseCookies } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
 
 export function withServerSideGuest<T>(
   getServerSideProps: GetServerSideProps<T>,
@@ -31,9 +31,9 @@ export function withServerSideAuth<T>(
   getServerSideProps: GetServerSideProps<T>,
 ) {
   return async (
-    context: GetServerSidePropsContext,
+    ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<T>> => {
-    const cookies = parseCookies(context);
+    const cookies = parseCookies(ctx);
     const token = cookies[process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!];
 
     if (!token) {
@@ -45,6 +45,22 @@ export function withServerSideAuth<T>(
       };
     }
 
-    return getServerSideProps(context);
+    try {
+      return getServerSideProps(ctx);
+    } catch (error: any) {
+      if (error.message === 'auth error') {
+        destroyCookie(ctx, process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!);
+        destroyCookie(ctx, process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!);
+
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        };
+      }
+
+      throw error;
+    }
   };
 }
