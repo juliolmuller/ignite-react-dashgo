@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { destroyCookie, parseCookies, setCookie } from 'nookies';
+import { parseCookies, setCookie } from 'nookies';
 
 interface RequestsAwaitingTokenRefresh {
   resolve: () => void;
@@ -84,8 +84,6 @@ api.interceptors.response.use(
 
       return api.request(error.config);
     } catch {
-      destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!);
-      destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!);
       requestsQueue.forEach((request) => {
         requestsQueue.delete(request);
         request.reject();

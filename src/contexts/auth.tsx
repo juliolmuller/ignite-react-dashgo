@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { parseCookies, setCookie } from 'nookies';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import {
   createContext,
   ReactNode,
@@ -25,6 +25,7 @@ export interface AuthContextProps {
   isAuthenticated: boolean;
   user: User | undefined;
   signIn: (credentials: SignInCredentials) => Promise<void>;
+  signOut: () => void;
 }
 
 export interface AuthProviderProps {
@@ -64,6 +65,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }
 
+  async function signOut() {
+    destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!);
+    destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!);
+    setUser(undefined);
+    router.replace('/');
+  }
+
   useEffect(() => {
     const cookies = parseCookies();
     const token = cookies[process.env.NEXT_PUBLIC_COOKIE_KEY_TOKEN!];
@@ -77,12 +85,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const { email, roles, permissions } = data;
           setUser({ email, roles, permissions });
         })
-        .catch((error) => router.replace('/'));
+        .catch(signOut);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, signIn }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
