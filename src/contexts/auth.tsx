@@ -32,6 +32,8 @@ export interface AuthProviderProps {
   children: ReactNode;
 }
 
+let authChannel: BroadcastChannel;
+
 export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -63,6 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       roles: data.roles,
       permissions: data.permissions,
     });
+    authChannel.postMessage('signIn');
   }
 
   async function signOut() {
@@ -70,7 +73,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     destroyCookie(null, process.env.NEXT_PUBLIC_COOKIE_KEY_REFRESH_TOKEN!);
     setUser(undefined);
     router.replace('/');
+    authChannel.postMessage('signOut');
   }
+
+  useEffect(() => {
+    authChannel = new BroadcastChannel('auth');
+
+    authChannel.onmessage = (event) => {
+      switch (event.data) {
+        case 'signIn':
+          router.push('/dashboard');
+          break;
+
+        case 'signOut':
+          signOut();
+          break;
+
+        default:
+      }
+    };
+
+    return () => authChannel.close();
+  }, [router, signOut]);
 
   useEffect(() => {
     const cookies = parseCookies();
