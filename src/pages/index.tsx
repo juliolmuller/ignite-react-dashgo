@@ -44,7 +44,7 @@ export default function SignInPage() {
       await signIn(data);
       router.replace('/dashboard');
     } catch (error: any) {
-      setErrorMsg(error.response.data.message);
+      setErrorMsg(error.response?.data?.message ?? error.message);
     }
   }
 
