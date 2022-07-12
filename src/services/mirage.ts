@@ -92,7 +92,7 @@ export function initializeServer() {
       // reset namespace to avoid conflicts with Next's router
       this.namespace = '';
       this.passthrough();
-      this.passthrough(`${AUTH_BASE_URL}/**`);
+      this.passthrough(`${AUTH_BASE_URL}/**/*`);
     },
   });
 }
