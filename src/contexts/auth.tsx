@@ -94,7 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
 
     return () => authChannel.close();
-  }, [router, signOut]);
+  }, [router]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const cookies = parseCookies();
