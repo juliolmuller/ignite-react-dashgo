@@ -16,11 +16,11 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
-import { useQuery } from 'react-query';
 
 import { AppHeader, AppSideBar, Pagination } from '~/components';
 import { PagedResponse, UserModel } from '~/services/mirage';
