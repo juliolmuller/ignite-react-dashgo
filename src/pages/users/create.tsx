@@ -8,11 +8,11 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import * as yup from 'yup';
 
 import { AppHeader, AppSideBar, FormInput } from '~/components';

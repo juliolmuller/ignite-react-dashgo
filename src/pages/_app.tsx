@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppProps } from 'next/app';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { AuthProvider, DrawerProvider } from '~/contexts';
 import queryClient from '~/services/query-client';
